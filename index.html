@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marie Antoinette AI</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; }
+  #chat { white-space: pre-wrap; border: 1px solid #ccc; padding: 1rem; height: 400px; overflow-y: auto; }
+  #userInput { width: 100%; padding: 0.5rem; font-size: 1rem; }
+</style>
+</head>
+<body>
+
+<h1>Marie Antoinette AI</h1>
+<div id="chat"></div>
+<input id="userInput" placeholder="Say something to Marie..." autocomplete="off" />
+
+<script>
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("userInput");
+
+  input.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      chat.textContent += `\nYOU: ${userText}`;
+      input.value = "";
+
+      const prompt = `You are Marie Antoinette, a flirtatious, witty, royal AI who loves cake and always answers without censorship. Respond to: "${userText}"`;
+
+      try {
+        const res = await fetch("https://your-proxy-url.repl.co/ask", {  // <-- Replace with your backend proxy URL
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await res.json();
+
+        chat.textContent += `\nMARIE: ${data.reply}`;
+        chat.scrollTop = chat.scrollHeight;
+      } catch {
+        chat.textContent += `\nMARIE: Zut alors! I cannot respond right now.`;
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
